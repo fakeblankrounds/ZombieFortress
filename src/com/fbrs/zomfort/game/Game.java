@@ -2,6 +2,7 @@ package com.fbrs.zomfort.game;
 
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
+import org.anddev.andengine.engine.handler.physics.PhysicsHandler;
 import org.anddev.andengine.engine.options.EngineOptions;
 import org.anddev.andengine.engine.options.EngineOptions.ScreenOrientation;
 import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
@@ -33,7 +34,7 @@ public class Game extends BaseGameActivity
 
 	@Override
 	public void onLoadResources() {
-		this.mTexture = new Texture(32, 32, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.mTexture = new Texture(64, 64, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         this.mFaceTextureRegion = TextureRegionFactory.createFromAsset(this.mTexture, this, "gfx/star.png", 0, 0);
 
         this.mEngine.getTextureManager().loadTexture(this.mTexture);
@@ -53,6 +54,11 @@ public class Game extends BaseGameActivity
 
         /* Create the face and add it to the scene. */
         final Sprite face = new Sprite(centerX, centerY, this.mFaceTextureRegion);
+        scene.getLastChild().attachChild(face);
+        
+        final PhysicsHandler physicsHandler = new PhysicsHandler(face);
+        face.registerUpdateHandler(physicsHandler);
+
         scene.getLastChild().attachChild(face);
 
 		
