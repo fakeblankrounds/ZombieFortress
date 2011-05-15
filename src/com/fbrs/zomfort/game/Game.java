@@ -1,7 +1,11 @@
 package com.fbrs.zomfort.game;
 
+import java.util.HashMap;
+import java.util.Random;
+
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
+import org.anddev.andengine.engine.handler.IUpdateHandler;
 import org.anddev.andengine.engine.handler.physics.PhysicsHandler;
 import org.anddev.andengine.engine.options.EngineOptions;
 import org.anddev.andengine.engine.options.EngineOptions.ScreenOrientation;
@@ -16,6 +20,8 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
+import com.fbrs.Math.Vector2;
+
 public class Game extends BaseGameActivity
 {
 
@@ -26,9 +32,17 @@ public class Game extends BaseGameActivity
 	private Texture mTexture;
 	private TextureRegion mFaceTextureRegion;
 	
+	private HashMap<String, TextureRegion> TexLookup;
+	private Scene scene;
+	private SSL ssl;
+
+	
 	@Override
 	public Engine onLoadEngine() {
 		this.mCamera = new Camera(0, 0, CAM_W, CAM_H);
+		TexLookup = new HashMap<String, TextureRegion>();
+		ssl = new SSL();
+		
 		return new Engine(new EngineOptions(true, ScreenOrientation.LANDSCAPE, new RatioResolutionPolicy(CAM_W, CAM_H), this.mCamera));
 	}
 
@@ -36,6 +50,7 @@ public class Game extends BaseGameActivity
 	public void onLoadResources() {
 		this.mTexture = new Texture(64, 64, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         this.mFaceTextureRegion = TextureRegionFactory.createFromAsset(this.mTexture, this, "gfx/star.png", 0, 0);
+        TexLookup.put("star", mFaceTextureRegion);
 
         this.mEngine.getTextureManager().loadTexture(this.mTexture);
 		
@@ -45,7 +60,7 @@ public class Game extends BaseGameActivity
 	public Scene onLoadScene() {
 		this.mEngine.registerUpdateHandler(new FPSLogger());
 		
-		final Scene scene = new Scene(1);
+		scene = new Scene(1);
 		scene.setBackground(new ColorBackground(0, 0, 0.8f));
 		
 		/* Calculate the coordinates for the face, so its centered on the camera. */
@@ -61,14 +76,46 @@ public class Game extends BaseGameActivity
 
         scene.getLastChild().attachChild(face);
 
+        //regesters the SSL
+        scene.registerUpdateHandler(new IUpdateHandler(){
+
+			@Override
+			public void onUpdate(float pSecondsElapsed) {
+				ssl.RunScripts();
+			}
+
+			@Override
+			public void reset() {
+				ssl.Clear();
+			}
+        	
+        });
 		
+        
 		return scene;
 	}
 
 	@Override
 	public void onLoadComplete() {
 		// TODO Auto-generated method stub
-		
+		Random rand = new Random();
+		for(int i = 0; i < 100; i++)
+		{
+			
+			MakeGameObject("star", new Vector2(rand.nextInt(800),rand.nextInt(480)), ssl.CombineScripts("sZombie"));
+	
+		}
 	}
 	
+	public Sprite MakeGameObject(String Tex, Vector2 loc, IScript script)
+	{
+		Sprite return_s = new Sprite(loc.x, loc.y, TexLookup.get(Tex));
+		final PhysicsHandler physicsHandler = new PhysicsHandler(return_s);
+        return_s.registerUpdateHandler(physicsHandler);
+        scene.getLastChild().attachChild(return_s);
+        
+        script.ApplyScript(return_s);
+        
+        return return_s;
+	}
 }
