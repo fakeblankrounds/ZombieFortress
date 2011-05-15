@@ -21,6 +21,7 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.fbrs.Math.Vector2;
 import com.fbrs.zomfort.scripts.Physics;
 
@@ -33,6 +34,8 @@ public class Game extends BaseGameActivity
 	private Camera mCamera;
 	private Texture mTexture;
 	private TextureRegion mFaceTextureRegion;
+	private Texture mTexture2;
+	private TextureRegion mFaceTextureRegion2;
 	
 	private HashMap<String, TextureRegion> TexLookup;
 	private Scene scene;
@@ -54,6 +57,10 @@ public class Game extends BaseGameActivity
 		this.mTexture = new Texture(64, 64, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         this.mFaceTextureRegion = TextureRegionFactory.createFromAsset(this.mTexture, this, "gfx/star.png", 0, 0);
         TexLookup.put("star", mFaceTextureRegion);
+        
+		this.mTexture2 = new Texture(1024, 8, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        this.mFaceTextureRegion2 = TextureRegionFactory.createFromAsset(this.mTexture2, this, "gfx/ground.png", 0, 0);
+        TexLookup.put("ground", mFaceTextureRegion2);
 
         this.mEngine.getTextureManager().loadTexture(this.mTexture);
 		
@@ -104,11 +111,10 @@ public class Game extends BaseGameActivity
 	public void onLoadComplete() {
 		// TODO Auto-generated method stub
 		Random rand = new Random();
+		MakeGameObject("ground", new Vector2(0,480), ssl.CombineScripts("sPhys"), BodyType.StaticBody);
 		for(int i = 0; i < 100; i++)
 		{
-			
-			MakeGameObject("star", new Vector2(rand.nextInt(800),rand.nextInt(480)), ssl.CombineScripts("sPhys"));
-	
+			MakeGameObject("star", new Vector2(rand.nextInt(800),rand.nextInt(480)), ssl.CombineScripts("sPhys::sZombie"));
 		}
 	}
 	
@@ -120,6 +126,22 @@ public class Game extends BaseGameActivity
         scene.getLastChild().attachChild(return_s);
         GameObject newobj = new GameObject();
         newobj.sprite = return_s;
+        newobj.bodType = BodyType.DynamicBody;
+        script.ApplyScript(newobj);
+        
+        return newobj;
+	}
+	
+	public GameObject MakeGameObject(String Tex, Vector2 loc, IScript script, BodyType type)
+	{
+		Sprite return_s = new Sprite(loc.x, loc.y, TexLookup.get(Tex));
+		final PhysicsHandler physicsHandler = new PhysicsHandler(return_s);
+        return_s.registerUpdateHandler(physicsHandler);
+        scene.getLastChild().attachChild(return_s);
+        GameObject newobj = new GameObject();
+        newobj.sprite = return_s;
+        newobj.bodType = type;
+        	
         script.ApplyScript(newobj);
         
         return newobj;

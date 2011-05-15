@@ -30,7 +30,7 @@ public class Physics implements IScript {
         //Shape right = new Rectangle(Game.CAM_W - 2, 0, 2, Game.CAM_H);
 
         final FixtureDef wallFixtureDef = PhysicsFactory.createFixtureDef(0, 0.5f, 0.5f);
-        PhysicsFactory.createBoxBody(mPhysicsWorld, new Rectangle(0, Game.CAM_H - 2, Game.CAM_W, 2), BodyType.StaticBody, wallFixtureDef);
+       // PhysicsFactory.createBoxBody(mPhysicsWorld, new Rectangle(0, Game.CAM_H - 2, Game.CAM_W, 2), BodyType.StaticBody, wallFixtureDef);
         //PhysicsFactory.createBoxBody(mPhysicsWorld, roof, BodyType.StaticBody, wallFixtureDef);
         //PhysicsFactory.createBoxBody(mPhysicsWorld, left, BodyType.StaticBody, wallFixtureDef);
         //PhysicsFactory.createBoxBody(mPhysicsWorld, right, BodyType.StaticBody, wallFixtureDef);
@@ -42,7 +42,7 @@ public class Physics implements IScript {
 		// TODO Auto-generated method stub
 		GameObject phys = (GameObject)o;
 		
-		phys.body = PhysicsFactory.createBoxBody(mPhysicsWorld, phys.sprite, BodyType.DynamicBody, FIXTURE_DEF);
+		phys.body = PhysicsFactory.createBoxBody(mPhysicsWorld, phys.sprite, phys.bodType, FIXTURE_DEF);
 		this.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(phys.sprite, phys.body, true, true));
 	}
 
