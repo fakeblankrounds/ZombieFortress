@@ -15,6 +15,7 @@ import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.util.FPSLogger;
 import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
+import org.anddev.andengine.input.touch.TouchEvent;
 import org.anddev.andengine.opengl.texture.Texture;
 import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
@@ -28,8 +29,8 @@ import com.fbrs.zomfort.scripts.Physics;
 public class Game extends BaseGameActivity
 {
 
-	public static final int CAM_W = 800;
-	public static final int CAM_H = 480;
+	public static final int CAM_W = 1600;
+	public static final int CAM_H = 940;
 	
 	private Camera mCamera;
 	private Texture mTexture;
@@ -70,7 +71,15 @@ public class Game extends BaseGameActivity
 	public Scene onLoadScene() {
 		this.mEngine.registerUpdateHandler(new FPSLogger());
 		
-		scene = new Scene(1);
+		scene = new Scene(1){
+			
+			@Override
+			public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent)
+			{
+				return true;
+			}
+		}
+		;
 		scene.setBackground(new ColorBackground(0, 0, 0.8f));
 		
 		/* Calculate the coordinates for the face, so its centered on the camera. */
@@ -104,18 +113,22 @@ public class Game extends BaseGameActivity
         //special regester for the physics
         scene.registerUpdateHandler(Physics.mPhysicsWorld);
         
+        
+        
 		return scene;
 	}
+	
 
 	@Override
 	public void onLoadComplete() {
 		// TODO Auto-generated method stub
 		Random rand = new Random();
 		MakeGameObject("ground", new Vector2(0,480), ssl.CombineScripts("sPhys"), BodyType.StaticBody);
-		for(int i = 0; i < 100; i++)
+		/*for(int i = 0; i < 100; i++)
 		{
-			MakeGameObject("star", new Vector2(rand.nextInt(800),rand.nextInt(480)), ssl.CombineScripts("sPhys::sZombie"));
+			MakeGameObject("star", new Vector2(rand.nextInt(800),rand.nextInt(480)), ssl.CombineScripts("sPhys"));
 		}
+		MakeGameObject("star", new Vector2(480,0), ssl.CombineScripts("sPhys::sZombie")); */
 	}
 	
 	public GameObject MakeGameObject(String Tex, Vector2 loc, IScript script)
