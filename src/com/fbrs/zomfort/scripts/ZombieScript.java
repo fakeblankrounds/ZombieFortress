@@ -4,20 +4,21 @@ import java.util.ArrayList;
 
 import org.anddev.andengine.entity.sprite.Sprite;
 
+import com.fbrs.zomfort.game.GameObject;
 import com.fbrs.zomfort.game.IScript;
 
 public class ZombieScript implements IScript {
 
-	ArrayList<Sprite> zombies;
+	ArrayList<GameObject> zombies;
 	
 	public ZombieScript()
 	{
-		zombies = new ArrayList<Sprite>();
+		zombies = new ArrayList<GameObject>();
 	}
 	
 	@Override
 	public void ApplyScript(Object o) {
-		Sprite add = (Sprite) o;
+		zombies.add((GameObject) o);
 
 	}
 

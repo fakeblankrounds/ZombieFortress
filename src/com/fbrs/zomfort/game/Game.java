@@ -14,6 +14,7 @@ import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.util.FPSLogger;
+import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
 import org.anddev.andengine.opengl.texture.Texture;
 import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
@@ -21,12 +22,13 @@ import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
 import com.fbrs.Math.Vector2;
+import com.fbrs.zomfort.scripts.Physics;
 
 public class Game extends BaseGameActivity
 {
 
-	private static final int CAM_W = 800;
-	private static final int CAM_H = 480;
+	public static final int CAM_W = 800;
+	public static final int CAM_H = 480;
 	
 	private Camera mCamera;
 	private Texture mTexture;
@@ -35,6 +37,7 @@ public class Game extends BaseGameActivity
 	private HashMap<String, TextureRegion> TexLookup;
 	private Scene scene;
 	private SSL ssl;
+	//private PhysicsWorld mPhysicsWorld;
 
 	
 	@Override
@@ -91,6 +94,8 @@ public class Game extends BaseGameActivity
         	
         });
 		
+        //special regester for the physics
+        scene.registerUpdateHandler(Physics.mPhysicsWorld);
         
 		return scene;
 	}
@@ -102,20 +107,21 @@ public class Game extends BaseGameActivity
 		for(int i = 0; i < 100; i++)
 		{
 			
-			MakeGameObject("star", new Vector2(rand.nextInt(800),rand.nextInt(480)), ssl.CombineScripts("sZombie"));
+			MakeGameObject("star", new Vector2(rand.nextInt(800),rand.nextInt(480)), ssl.CombineScripts("sPhys"));
 	
 		}
 	}
 	
-	public Sprite MakeGameObject(String Tex, Vector2 loc, IScript script)
+	public GameObject MakeGameObject(String Tex, Vector2 loc, IScript script)
 	{
 		Sprite return_s = new Sprite(loc.x, loc.y, TexLookup.get(Tex));
 		final PhysicsHandler physicsHandler = new PhysicsHandler(return_s);
         return_s.registerUpdateHandler(physicsHandler);
         scene.getLastChild().attachChild(return_s);
+        GameObject newobj = new GameObject();
+        newobj.sprite = return_s;
+        script.ApplyScript(newobj);
         
-        script.ApplyScript(return_s);
-        
-        return return_s;
+        return newobj;
 	}
 }

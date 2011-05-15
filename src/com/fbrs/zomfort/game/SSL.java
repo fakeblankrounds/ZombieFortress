@@ -2,6 +2,7 @@ package com.fbrs.zomfort.game;
 
 import java.util.HashMap;
 
+import com.fbrs.zomfort.scripts.Physics;
 import com.fbrs.zomfort.scripts.ZombieScript;
 
 public class SSL {
@@ -13,6 +14,8 @@ public class SSL {
 		scriptsMap = new HashMap<String, IScript>();
 		
 		scriptsMap.put("sZombie", new ZombieScript());
+		Physics phys = new Physics();
+		scriptsMap.put("sPhys", phys);
 	}
 	
 	public void RunScripts()

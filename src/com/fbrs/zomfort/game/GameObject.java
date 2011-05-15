@@ -2,7 +2,10 @@ package com.fbrs.zomfort.game;
 
 import org.anddev.andengine.entity.sprite.Sprite;
 
-public class GameObject {
+import com.badlogic.gdx.physics.box2d.Body;
 
-	Sprite sprite;
+public class GameObject extends Object{
+
+	public Sprite sprite;
+	public Body body;
 }
