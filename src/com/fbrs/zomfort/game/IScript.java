@@ -2,7 +2,8 @@ package com.fbrs.zomfort.game;
 
 public interface IScript {
 	
-	public void ApplyScript(Object o);
+	//This should return the edited object. 
+	public Object ApplyScript(Object o);
 	
 	public void RunScript();
 	

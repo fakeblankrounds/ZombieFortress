@@ -38,12 +38,14 @@ public class Physics implements IScript {
 	
 	}
 	@Override
-	public void ApplyScript(Object o) {
+	public Object ApplyScript(Object o) {
 		// TODO Auto-generated method stub
 		GameObject phys = (GameObject)o;
 		
 		phys.body = PhysicsFactory.createBoxBody(mPhysicsWorld, phys.sprite, phys.bodType, FIXTURE_DEF);
 		this.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(phys.sprite, phys.body, true, true));
+		
+		return phys;
 	}
 
 	@Override

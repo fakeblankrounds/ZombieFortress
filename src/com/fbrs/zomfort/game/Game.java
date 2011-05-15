@@ -22,25 +22,25 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.fbrs.Math.Vector2;
 import com.fbrs.zomfort.scripts.Physics;
+import com.fbrs.zomfort.scripts.ZombieScript;
 
 public class Game extends BaseGameActivity
 {
 
-	public static final int CAM_W = 1600;
-	public static final int CAM_H = 940;
+	public static final int CAM_W = 800;
+	public static final int CAM_H = 480;
 	
 	private Camera mCamera;
-	private Texture mTexture;
-	private TextureRegion mFaceTextureRegion;
-	private Texture mTexture2;
-	private TextureRegion mFaceTextureRegion2;
+	private Texture[] mTexture;
+	private TextureRegion[] mFaceTextureRegion;
+
 	
-	private HashMap<String, TextureRegion> TexLookup;
-	private Scene scene;
-	private SSL ssl;
+	public static HashMap<String, TextureRegion> TexLookup;
+	public static Scene scene;
+	public static SSL ssl;
 	//private PhysicsWorld mPhysicsWorld;
 
 	
@@ -55,15 +55,35 @@ public class Game extends BaseGameActivity
 
 	@Override
 	public void onLoadResources() {
-		this.mTexture = new Texture(64, 64, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        this.mFaceTextureRegion = TextureRegionFactory.createFromAsset(this.mTexture, this, "gfx/star.png", 0, 0);
-        TexLookup.put("star", mFaceTextureRegion);
+		
+		int NUMTEXTURES = 5;
+		int i = 0;
+		
+		mTexture = new Texture[NUMTEXTURES];
+		mFaceTextureRegion = new TextureRegion[NUMTEXTURES];		
+		
+		this.mTexture[i] = new Texture(64, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        this.mFaceTextureRegion[i] = TextureRegionFactory.createFromAsset(this.mTexture[i], this, "gfx/zombie.png", 0, 0);
+        TexLookup.put("zombie", mFaceTextureRegion[i]);
         
-		this.mTexture2 = new Texture(1024, 8, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        this.mFaceTextureRegion2 = TextureRegionFactory.createFromAsset(this.mTexture2, this, "gfx/ground.png", 0, 0);
-        TexLookup.put("ground", mFaceTextureRegion2);
+        i++;
+		this.mTexture[i] = new Texture(1024, 8, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        this.mFaceTextureRegion[i] = TextureRegionFactory.createFromAsset(this.mTexture[i], this, "gfx/ground.png", 0, 0);
+        TexLookup.put("ground", mFaceTextureRegion[i]);
+        
+        i++;
+		this.mTexture[i] = new Texture(32, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        this.mFaceTextureRegion[i] = TextureRegionFactory.createFromAsset(this.mTexture[i], this, "gfx/beam.png", 0, 0);
+        TexLookup.put("beam", mFaceTextureRegion[i]);
+        
+        i++;
+		this.mTexture[i] = new Texture(32, 32, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        this.mFaceTextureRegion[i] = TextureRegionFactory.createFromAsset(this.mTexture[i], this, "gfx/dot.png", 0, 0);
+        TexLookup.put("beam", mFaceTextureRegion[i]);
 
-        this.mEngine.getTextureManager().loadTexture(this.mTexture);
+
+        for(int j = 0; j < i; j++)
+        	this.mEngine.getTextureManager().loadTexture(this.mTexture[j]);
 		
 	}
 
@@ -71,30 +91,25 @@ public class Game extends BaseGameActivity
 	public Scene onLoadScene() {
 		this.mEngine.registerUpdateHandler(new FPSLogger());
 		
-		scene = new Scene(1){
-			
-			@Override
-			public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent)
-			{
-				return true;
-			}
-		}
-		;
+		scene = new Scene(1);
+		
 		scene.setBackground(new ColorBackground(0, 0, 0.8f));
 		
-		/* Calculate the coordinates for the face, so its centered on the camera. */
-        final int centerX = (CAM_W - this.mFaceTextureRegion.getWidth()) / 2;
-        final int centerY = (CAM_H - this.mFaceTextureRegion.getHeight()) / 2;
-
         /* Create the face and add it to the scene. */
-        final Sprite face = new Sprite(centerX, centerY, this.mFaceTextureRegion);
+/*
+        final Sprite face = new Sprite(centerX, centerY, this.mFaceTextureRegion) {
+                @Override
+                public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+                        this.setPosition(pSceneTouchEvent.getX() - this.getWidth() / 2, pSceneTouchEvent.getY() - this.getHeight() / 2);
+                        return true;
+                }
+        };
+        face.setScale(4);
         scene.getLastChild().attachChild(face);
-        
-        final PhysicsHandler physicsHandler = new PhysicsHandler(face);
-        face.registerUpdateHandler(physicsHandler);
-
-        scene.getLastChild().attachChild(face);
-
+        scene.registerTouchArea(face);
+        scene.setTouchAreaBindingEnabled(true);
+*/
+ 
         //regesters the SSL
         scene.registerUpdateHandler(new IUpdateHandler(){
 
@@ -112,8 +127,7 @@ public class Game extends BaseGameActivity
 		
         //special regester for the physics
         scene.registerUpdateHandler(Physics.mPhysicsWorld);
-        
-        
+  
         
 		return scene;
 	}
@@ -123,40 +137,35 @@ public class Game extends BaseGameActivity
 	public void onLoadComplete() {
 		// TODO Auto-generated method stub
 		Random rand = new Random();
-		MakeGameObject("ground", new Vector2(0,480), ssl.CombineScripts("sPhys"), BodyType.StaticBody);
-		/*for(int i = 0; i < 100; i++)
+		MakeGameObject("ground", new Vector2(0,480), ssl.CombineScripts("sSprite::sPhys"), BodyType.StaticBody);
+		for(int i = 0; i < 10; i++)
 		{
-			MakeGameObject("star", new Vector2(rand.nextInt(800),rand.nextInt(480)), ssl.CombineScripts("sPhys"));
+			MakeGameObject("zombie", new Vector2(rand.nextInt(800),rand.nextInt(480)), ssl.CombineScripts("sZombie::sPhys"));
 		}
-		MakeGameObject("star", new Vector2(480,0), ssl.CombineScripts("sPhys::sZombie")); */
+		/*MakeGameObject("star", new Vector2(480,0), ssl.CombineScripts("sPhys::sZombie")); */
 	}
 	
-	public GameObject MakeGameObject(String Tex, Vector2 loc, IScript script)
+	public static GameObject MakeGameObject(String Tex, Vector2 loc, IScript script)
 	{
-		Sprite return_s = new Sprite(loc.x, loc.y, TexLookup.get(Tex));
-		final PhysicsHandler physicsHandler = new PhysicsHandler(return_s);
-        return_s.registerUpdateHandler(physicsHandler);
-        scene.getLastChild().attachChild(return_s);
-        GameObject newobj = new GameObject();
-        newobj.sprite = return_s;
-        newobj.bodType = BodyType.DynamicBody;
-        script.ApplyScript(newobj);
+		GameObject newobj = new GameObject();
+		newobj.bodType = BodyType.DynamicBody;
+		newobj.loc = loc;
+		newobj.Tex = Tex;
+		newobj = (GameObject)script.ApplyScript(newobj);
+		
+		scene.registerTouchArea(newobj.sprite);
         
         return newobj;
 	}
 	
-	public GameObject MakeGameObject(String Tex, Vector2 loc, IScript script, BodyType type)
+	public static GameObject MakeGameObject(String Tex, Vector2 loc, IScript script, BodyType type)
 	{
-		Sprite return_s = new Sprite(loc.x, loc.y, TexLookup.get(Tex));
-		final PhysicsHandler physicsHandler = new PhysicsHandler(return_s);
-        return_s.registerUpdateHandler(physicsHandler);
-        scene.getLastChild().attachChild(return_s);
-        GameObject newobj = new GameObject();
-        newobj.sprite = return_s;
-        newobj.bodType = type;
-        	
-        script.ApplyScript(newobj);
-        
+		GameObject newobj = new GameObject();
+		newobj.bodType = type;
+		newobj.loc = loc;
+		newobj.Tex = Tex;
+		newobj = (GameObject)script.ApplyScript(newobj);
+		scene.registerTouchArea(newobj.sprite);
         return newobj;
 	}
 }

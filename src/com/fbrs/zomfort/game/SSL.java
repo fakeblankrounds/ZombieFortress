@@ -2,6 +2,7 @@ package com.fbrs.zomfort.game;
 
 import java.util.HashMap;
 
+import com.fbrs.zomfort.scripts.AddSprite;
 import com.fbrs.zomfort.scripts.Physics;
 import com.fbrs.zomfort.scripts.ZombieScript;
 
@@ -14,8 +15,9 @@ public class SSL {
 		scriptsMap = new HashMap<String, IScript>();
 		
 		scriptsMap.put("sZombie", new ZombieScript());
-		Physics phys = new Physics();
-		scriptsMap.put("sPhys", phys);
+		scriptsMap.put("sPhys", new Physics());
+		scriptsMap.put("sSprite", new AddSprite());
+		
 	}
 	
 	public void RunScripts()
@@ -48,13 +50,14 @@ public class SSL {
 		return new IScript(){
 
 			@Override
-			public void ApplyScript(Object o) {
+			public Object ApplyScript(Object o) {
+				Object obj = o;
 				for(int i = 0; i < apply.length; i++)
 				{
-					apply[i].ApplyScript(o);
+					obj = apply[i].ApplyScript(obj);
 				}
 				
-				
+				return obj;
 			}
 
 			@Override
