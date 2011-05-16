@@ -17,4 +17,7 @@ public class GameObject extends Object{
 	public String Tex;
 	
 	public GameObject Parent;
+	public GameObject circ1;
+	public GameObject circ2;
+	public GameObject circ3;
 }

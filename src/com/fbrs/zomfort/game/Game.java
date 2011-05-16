@@ -79,7 +79,7 @@ public class Game extends BaseGameActivity
         i++;
 		this.mTexture[i] = new Texture(32, 32, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         this.mFaceTextureRegion[i] = TextureRegionFactory.createFromAsset(this.mTexture[i], this, "gfx/dot.png", 0, 0);
-        TexLookup.put("beam", mFaceTextureRegion[i]);
+        TexLookup.put("dot", mFaceTextureRegion[i]);
 
 
         for(int j = 0; j < i; j++)
@@ -140,8 +140,10 @@ public class Game extends BaseGameActivity
 		MakeGameObject("ground", new Vector2(0,480), ssl.CombineScripts("sSprite::sPhys"), BodyType.StaticBody);
 		for(int i = 0; i < 10; i++)
 		{
-			MakeGameObject("zombie", new Vector2(rand.nextInt(800),rand.nextInt(480)), ssl.CombineScripts("sZombie::sPhys"));
+			//MakeGameObject("zombie", new Vector2(rand.nextInt(800),rand.nextInt(480)), ssl.CombineScripts("sZombie::sPhys"));
 		}
+		
+		MakeGameObject("beam", new Vector2(CAM_W/2 - 16, CAM_H/2 - 128), ssl.CombineScripts("sBeam"));
 		/*MakeGameObject("star", new Vector2(480,0), ssl.CombineScripts("sPhys::sZombie")); */
 	}
 	
@@ -153,7 +155,7 @@ public class Game extends BaseGameActivity
 		newobj.Tex = Tex;
 		newobj = (GameObject)script.ApplyScript(newobj);
 		
-		scene.registerTouchArea(newobj.sprite);
+		
         
         return newobj;
 	}

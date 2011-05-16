@@ -3,7 +3,10 @@ package com.fbrs.zomfort.game;
 import java.util.HashMap;
 
 import com.fbrs.zomfort.scripts.AddSprite;
+import com.fbrs.zomfort.scripts.BeamScript;
+import com.fbrs.zomfort.scripts.Move;
 import com.fbrs.zomfort.scripts.Physics;
+import com.fbrs.zomfort.scripts.Rotate;
 import com.fbrs.zomfort.scripts.ZombieScript;
 
 public class SSL {
@@ -17,6 +20,9 @@ public class SSL {
 		scriptsMap.put("sZombie", new ZombieScript());
 		scriptsMap.put("sPhys", new Physics());
 		scriptsMap.put("sSprite", new AddSprite());
+		scriptsMap.put("sRotate", new Rotate());
+		scriptsMap.put("sMove", new Move());
+		scriptsMap.put("sBeam", new BeamScript());
 		
 	}
 	

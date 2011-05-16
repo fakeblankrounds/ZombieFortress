@@ -36,7 +36,7 @@ public class ZombieScript implements IScript {
 		//Game.scene.registerTouchArea(return_s);
         //Game.scene.setTouchAreaBindingEnabled(true);
 		obj.sprite = return_s;
-		
+		Game.scene.registerTouchArea(obj.sprite);
 		return obj;
 
 	}
