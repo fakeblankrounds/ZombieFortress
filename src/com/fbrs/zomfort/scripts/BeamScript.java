@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.anddev.andengine.engine.handler.physics.PhysicsHandler;
 import org.anddev.andengine.entity.sprite.Sprite;
 
+import com.badlogic.gdx.math.Vector2;
 import com.fbrs.zomfort.game.Beam;
 import com.fbrs.zomfort.game.Game;
 import com.fbrs.zomfort.game.GameObject;
@@ -32,8 +33,9 @@ public class BeamScript implements IScript {
 		beam.sprite = return_s;
 		
 		
-		//beam.circ1 = Game.MakeGameObject("dot", beam.loc.add(0, 120), Game.ssl.CombineScripts("sRotate"));
-		beam.circ2 = Game.MakeGameObject("dot", beam.loc.sub(beam.loc.mul(0.5f)), Game.ssl.CombineScripts("sMove"));
+		beam.circ1 = Game.MakeGameObject("dot", beam.loc.add(0, 0), Game.ssl.CombineScripts("sRotate"));
+		beam.circ1.Parent = beam;
+		beam.circ2 = Game.MakeGameObject("dot",new Vector2(return_s.getX() + (return_s.getWidth()/2) - 16, return_s.getY() + (return_s.getHeight()/2) - 16), Game.ssl.CombineScripts("sMove"));
 		beam.circ2.Parent = beam;
 		beams.add(beam);
 		return beam;	

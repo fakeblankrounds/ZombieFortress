@@ -167,7 +167,7 @@ public class Game extends BaseGameActivity
 		newobj.loc = loc;
 		newobj.Tex = Tex;
 		newobj = (GameObject)script.ApplyScript(newobj);
-		scene.registerTouchArea(newobj.sprite);
+		//scene.registerTouchArea(newobj.sprite);
         return newobj;
 	}
 }

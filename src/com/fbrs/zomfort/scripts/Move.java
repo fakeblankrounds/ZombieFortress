@@ -19,7 +19,7 @@ public class Move implements IScript {
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				test(this);
             this.setPosition(pSceneTouchEvent.getX() - this.getWidth() / 2, pSceneTouchEvent.getY() - this.getHeight() / 2);
-            obj.Parent.sprite.setPosition(pSceneTouchEvent.getX() - this.getWidth() / 2, pSceneTouchEvent.getY() - this.getHeight() / 2);
+            obj.Parent.sprite.setPosition(pSceneTouchEvent.getX() - obj.Parent.sprite.getWidth() / 2, pSceneTouchEvent.getY() - obj.Parent.sprite.getHeight() / 2);
             return true;
 			}
 		};
