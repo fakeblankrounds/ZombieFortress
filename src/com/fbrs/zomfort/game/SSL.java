@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.fbrs.zomfort.scripts.AddSprite;
 import com.fbrs.zomfort.scripts.BeamScript;
+import com.fbrs.zomfort.scripts.GameStates;
 import com.fbrs.zomfort.scripts.Move;
 import com.fbrs.zomfort.scripts.Physics;
 import com.fbrs.zomfort.scripts.Rotate;
@@ -23,6 +24,7 @@ public class SSL {
 		scriptsMap.put("sRotate", new Rotate());
 		scriptsMap.put("sMove", new Move());
 		scriptsMap.put("sBeam", new BeamScript());
+		scriptsMap.put("sGameStates", new GameStates());
 		
 	}
 	

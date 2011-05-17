@@ -17,6 +17,7 @@ public class AddSprite implements IScript {
 		final PhysicsHandler physicsHandler = new PhysicsHandler(return_s);
 		return_s.registerUpdateHandler(physicsHandler);
 		Game.scene.getLastChild().attachChild(return_s);
+		return_s.setScale(2);
 		obj.sprite = return_s;
 		
 		return obj;
