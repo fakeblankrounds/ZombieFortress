@@ -73,6 +73,7 @@ public class Game extends BaseGameActivity
 		addPng("build", 128, 128);
 		addPng("bg", 1024,512);
 		addPng("rollinghills", 256,256);
+		addPng("brain", 128,128);
 
         for(int j = 0; j < TexCount; j++)
         	this.mEngine.getTextureManager().loadTexture(this.mTexture[j]);
@@ -125,17 +126,24 @@ public class Game extends BaseGameActivity
 		// TODO Auto-generated method stub
 		Random rand = new Random();
 		ground = MakeGameObject("ground", new Vector2(CAM_W/4,CAM_H), ssl.CombineScripts("sSprite::sPhys"), BodyType.StaticBody);
-		
-		MakeGameObject("bg", new Vector2(400,240), ssl.CombineScripts("sSprite"));
+		ground.spriteType = 5;
+		GameObject bg = MakeGameObject("bg", new Vector2(400,240), ssl.CombineScripts("sSprite"));
 		GameObject foreground = MakeGameObject("rollinghills", new Vector2(0, CAM_H*0.75f), ssl.CombineScripts("sSprite"));
-		foreground.sprite.setZIndex(1);
+		foreground.sprite.setZIndex(3);
+		bg.sprite.setZIndex(0);
 		for(int i = 0; i < 10; i++)
 		{
 			//MakeGameObject("zombie", new Vector2(rand.nextInt(800),rand.nextInt(480)), ssl.CombineScripts("sZombie::sPhys"));
 		}		
 		//MakeGameObject("beam", new Vector2(CAM_W/2 - 16, CAM_H/2 - 128), ssl.CombineScripts("sBeam::sPhys"), BodyType.StaticBody);
 		
-		MakeGameObject("", new Vector2(0,0), ssl.CombineScripts("sGameStates"));
+		MakeGameObject("", new Vector2(0,0), ssl.CombineScripts("sGameStates")).sprite.setZIndex(10);
+		
+		MakeGameObject("",new Vector2(0,128), ssl.CombineScripts("sBeamSpawner")).sprite.setZIndex(10);
+		
+		MakeGameObject("brain", new Vector2(CAM_W * 0.75f, CAM_H * 0.75f), ssl.CombineScripts("sBeam::sBrain::sPhys"), BodyType.StaticBody);
+
+	
 	}
 	
 	public static GameObject MakeGameObject(String Tex, Vector2 loc, IScript script)
@@ -145,7 +153,7 @@ public class Game extends BaseGameActivity
 		newobj.loc = loc;
 		newobj.Tex = Tex;
 		newobj = (GameObject)script.ApplyScript(newobj);
-
+		Game.scene.getFirstChild().sortChildren();
         return newobj;
 	}
 	
@@ -156,7 +164,7 @@ public class Game extends BaseGameActivity
 		newobj.loc = loc;
 		newobj.Tex = Tex;
 		newobj = (GameObject)script.ApplyScript(newobj);
-
+		Game.scene.getFirstChild().sortChildren();
         return newobj;
 	}
 }

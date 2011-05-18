@@ -27,6 +27,7 @@ public class BeamScript implements IScript {
 		final Sprite return_s = new Sprite(beam.loc.x, beam.loc.y, Game.TexLookup.get(beam.Tex));
 		final PhysicsHandler physicsHandler = new PhysicsHandler(return_s);
 		return_s.registerUpdateHandler(physicsHandler);
+		return_s.setZIndex(2);
 		Game.scene.getLastChild().attachChild(return_s);
 		//Game.scene.registerTouchArea(return_s);
         //Game.scene.setTouchAreaBindingEnabled(true);
@@ -34,10 +35,14 @@ public class BeamScript implements IScript {
 		
 		
 		beam.circ1 = Game.MakeGameObject("dot", beam.loc.add(0, 0), Game.ssl.CombineScripts("sRotate"));
+		beam.circ1.sprite.setZIndex(4);
 		beam.circ1.Parent = beam;
 		beam.circ2 = Game.MakeGameObject("dot",new Vector2(return_s.getX() + (return_s.getWidth()/2) - 16, return_s.getY() + (return_s.getHeight()/2) - 16), Game.ssl.CombineScripts("sMove"));
 		beam.circ2.Parent = beam;
+		beam.circ2.sprite.setZIndex(4);
 		beams.add(beam);
+		beam.spriteType = 4;
+
 		return beam;	
 	}
 

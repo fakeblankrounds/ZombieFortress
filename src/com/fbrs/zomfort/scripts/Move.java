@@ -23,7 +23,8 @@ public class Move implements IScript {
             //Vector2 oldpos = new Vector2(obj.Parent.sprite.getX(), obj.Parent.sprite.getY());
             obj.Parent.sprite.setPosition(pSceneTouchEvent.getX() - obj.Parent.sprite.getWidth() / 2, pSceneTouchEvent.getY() - obj.Parent.sprite.getHeight() / 2);
             Vector2 transform = new Vector2(obj.Parent.sprite.getX()+ obj.Parent.sprite.getWidth() / 2, obj.Parent.sprite.getY() + obj.Parent.sprite.getHeight() / 2);
-            obj.Parent.body.setTransform(transform.mul(0.03125f), obj.Parent.sprite.getRotation());
+            obj.Parent.body.setTransform(transform.mul(0.03125f), (float) Math.toRadians(obj.Parent.sprite.getRotation()));
+            obj.Parent.circ1.sprite.setPosition(obj.Parent.sprite.getX(), obj.Parent.sprite.getY());
            
             
             return true;

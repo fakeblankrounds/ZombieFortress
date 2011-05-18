@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import com.fbrs.zomfort.scripts.AddSprite;
 import com.fbrs.zomfort.scripts.BeamScript;
+import com.fbrs.zomfort.scripts.BeamSpawner;
+import com.fbrs.zomfort.scripts.BrainScript;
 import com.fbrs.zomfort.scripts.GameStates;
 import com.fbrs.zomfort.scripts.Move;
 import com.fbrs.zomfort.scripts.Physics;
@@ -25,7 +27,8 @@ public class SSL {
 		scriptsMap.put("sMove", new Move());
 		scriptsMap.put("sBeam", new BeamScript());
 		scriptsMap.put("sGameStates", new GameStates());
-		
+		scriptsMap.put("sBeamSpawner", new BeamSpawner());
+		scriptsMap.put("sBrain", new BrainScript());
 	}
 	
 	public void RunScripts()

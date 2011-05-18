@@ -1,5 +1,7 @@
 package com.fbrs.zomfort.game;
 
+import java.util.ArrayList;
+
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
@@ -17,7 +19,17 @@ public class GameObject extends Object{
 	public BodyType bodType;
 	public Vector2 loc;
 	public String Tex;
-	public Fixture fix;
+	//public Fixture fix;
+	/*
+	 * Sprite Types: 
+	 * 0 = Scenery - should not collide
+	 * 1 = Gui - should not collide
+	 * 2 = Sensors - should collide, not drawn
+	 * 3+ = everything else
+	 */
+	public int spriteType;
+	
+	public ArrayList<GameObject> collisionList;
 	
 	public GameObject Parent;
 	public GameObject circ1;

@@ -1,5 +1,7 @@
 package com.fbrs.zomfort.scripts;
 
+import java.util.ArrayList;
+
 import org.anddev.andengine.entity.primitive.Line;
 import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.shape.RectangularShape;
@@ -10,6 +12,8 @@ import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.fbrs.zomfort.game.Game;
 import com.fbrs.zomfort.game.GameObject;
@@ -22,18 +26,25 @@ public class Physics implements IScript {
 	
 	public Physics()
 	{
-		//Physics.mPhysicsWorld =
 		mPhysicsWorld = new PhysicsWorld(new Vector2(0, 9), false);
-		//Rectangle ground = new Rectangle(0, Game.CAM_H - 2, Game.CAM_W, 2);
-        //Shape roof = new Rectangle(0, 0, Game.CAM_W, 2);
-        //Shape left = new Rectangle(0, 0, 2, Game.CAM_H);
-        //Shape right = new Rectangle(Game.CAM_W - 2, 0, 2, Game.CAM_H);
+		mPhysicsWorld.setContactListener(new ContactListener(){
+
+		@Override
+		public void beginContact(Contact contact) {
+			((GameObject)(contact.getFixtureA().getBody().getUserData())).collisionList.add((GameObject)contact.getFixtureB().getBody().getUserData());
+			((GameObject)(contact.getFixtureB().getBody().getUserData())).collisionList.add((GameObject)contact.getFixtureA().getBody().getUserData());
+		}
+
+		@Override
+		public void endContact(Contact contact) {
+			((GameObject)(contact.getFixtureA().getBody().getUserData())).collisionList.remove((GameObject)contact.getFixtureB().getBody().getUserData());
+			((GameObject)(contact.getFixtureB().getBody().getUserData())).collisionList.remove((GameObject)contact.getFixtureA().getBody().getUserData());
+			
+		}
+		});
 
         final FixtureDef wallFixtureDef = PhysicsFactory.createFixtureDef(0, 0.5f, 0.5f);
-       // PhysicsFactory.createBoxBody(mPhysicsWorld, new Rectangle(0, Game.CAM_H - 2, Game.CAM_W, 2), BodyType.StaticBody, wallFixtureDef);
-        //PhysicsFactory.createBoxBody(mPhysicsWorld, roof, BodyType.StaticBody, wallFixtureDef);
-        //PhysicsFactory.createBoxBody(mPhysicsWorld, left, BodyType.StaticBody, wallFixtureDef);
-        //PhysicsFactory.createBoxBody(mPhysicsWorld, right, BodyType.StaticBody, wallFixtureDef);
+     
 
 	
 	}
@@ -44,6 +55,8 @@ public class Physics implements IScript {
 		
 		phys.body = PhysicsFactory.createBoxBody(mPhysicsWorld, phys.sprite, phys.bodType, FIXTURE_DEF);
 		this.mPhysicsWorld.registerPhysicsConnector(new PhysicsConnector(phys.sprite, phys.body, true, true));
+		phys.body.setUserData(phys);
+		phys.collisionList = new ArrayList<GameObject>();
 		
 		return phys;
 	}

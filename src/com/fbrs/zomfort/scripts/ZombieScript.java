@@ -16,7 +16,7 @@ public class ZombieScript implements IScript {
 
 	ArrayList<GameObject> zombies;
 	
-	Vector2 brain = new Vector2(Game.CAM_W,0);
+	Vector2 brain = new Vector2(0,0);
 	
 	int framecount = 0;
 	
@@ -36,10 +36,12 @@ public class ZombieScript implements IScript {
 		//Game.scene.registerTouchArea(return_s);
         //Game.scene.setTouchAreaBindingEnabled(true);
 		return_s.setScale(0.5f);
+		return_s.setZIndex(1);
 		obj.sprite = return_s;
 		Game.scene.registerTouchArea(obj.sprite);
+		obj.spriteType = 3;
 		
-		obj.Health = 901;
+		obj.Health = 5;
 		return obj;
 
 	}
@@ -48,14 +50,23 @@ public class ZombieScript implements IScript {
 	public void RunScript() {
 		if(framecount == 10)
 		{
+			brain.set(BrainScript.brain.sprite.getX(), BrainScript.brain.sprite.getX());
 			for(GameObject zombie : zombies)
 			{
 				if(zombie.Health > 0 )
 				{
-					if(zombie.sprite.collidesWith(Game.ground.sprite)){
+					if(zombie.collisionList.contains(Game.ground)){
 					zombie.body.setAngularDamping(100);
 					zombie.body.applyLinearImpulse(brain.nor().mul(10), zombie.body.getLocalCenter());
 					//zombie.Health--;
+					}
+					for(int i = 0; i < zombie.collisionList.size(); i++)
+					{
+						if(zombie.collisionList.get(i).spriteType == 4)
+						{
+							zombie.collisionList.get(i).Health--;
+							zombie.Health--;
+						}
 					}
 				}
 				else
